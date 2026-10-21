@@ -18,7 +18,7 @@
       color: #2457a7;
     }
     .stream {
-      margin-top: 0;
+      margin-top: 12px;
     }
     .stream-heading {
       display: flex;
@@ -40,6 +40,9 @@
       overflow: hidden;
       border-radius: 8px;
       background: #111;
+    }
+    .stream .player {
+      margin-top: 8px;
     }
     .player iframe {
       display: block;
@@ -70,19 +73,44 @@
     </div>
     <p class="stream-note"><a href="https://www.twitch.tv/fairlyasian/clips?filter=clips&amp;range=all">Browse stream clips on Twitch</a></p>
   </section>
+  <section class="stream" aria-labelledby="vod-title">
+    <div class="stream-heading">
+      <h2 id="vod-title">Featured stream</h2>
+      <span class="twitch-badge">VIDEO</span>
+    </div>
+    <div class="player">
+      <iframe
+        id="twitch-vod"
+        title="Featured Twitch stream video"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="origin"
+      ></iframe>
+    </div>
+  </section>
   <p>I love playing FFXIV, classic WoW, and single player games like Kingdom Hearts, Final Fantasy, Resident Evil, and more!</p>
   <h2>About Me</h2>
   <p>My stream schedule is a little inconsistent at the moment, but I stream when I can</p>
   <p><a href="mailto:hello@example.com">Contact me</a></p>
   <script>
     const twitchChannel = "fairlyasian";
+    const twitchParents = new Set([
+      window.location.hostname || "localhost",
+      "fairlyasian.com",
+      "www.fairlyasian.com"
+    ]);
     const player = document.getElementById("twitch-player");
     const playerUrl = new URL("https://player.twitch.tv/");
     playerUrl.searchParams.set("channel", twitchChannel);
-    playerUrl.searchParams.set("parent", window.location.hostname || "localhost");
-    playerUrl.searchParams.set("autoplay", "true");
-    playerUrl.searchParams.set("muted", "true");
+    twitchParents.forEach((parent) => playerUrl.searchParams.append("parent", parent));
+    playerUrl.searchParams.set("autoplay", "false");
     player.src = playerUrl.toString();
+
+    const vodUrl = new URL("https://player.twitch.tv/");
+    vodUrl.searchParams.set("video", "v2881631081");
+    twitchParents.forEach((parent) => vodUrl.searchParams.append("parent", parent));
+    vodUrl.searchParams.set("autoplay", "false");
+    document.getElementById("twitch-vod").src = vodUrl.toString();
   </script>
 </body>
 </html>
